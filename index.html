@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blink // Future Messaging</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+    <div class="mesh-bg"></div>
+    
+    <section id="auth-screen" class="active">
+        <div class="auth-container glass">
+            <div class="logo-area">
+                <h1 class="glow-text">blink</h1>
+                <p>The speed of connection.</p>
+            </div>
+            <div class="input-group">
+                <input type="email" id="email" placeholder="Email" required>
+                <input type="password" id="password" placeholder="Password" required>
+            </div>
+            <div class="btn-group">
+                <button id="login-btn" class="primary-btn">Sign In</button>
+                <button id="signup-btn" class="secondary-btn">Join Blink</button>
+            </div>
+        </div>
+    </section>
+
+    <section id="app-screen">
+        <div class="main-layout glass">
+            <aside class="sidebar">
+                <div class="side-nav">
+                    <div class="user-circle" id="open-settings">
+                        <img id="my-pfp" src="https://api.dicebear.com/7.x/avataaars/svg?seed=Me" alt="">
+                    </div>
+                    <nav>
+                        <i class="fa-solid fa-house active"></i>
+                        <i class="fa-solid fa-message"></i>
+                        <i class="fa-solid fa-user-group"></i>
+                    </nav>
+                    <i class="fa-solid fa-right-from-bracket logout" id="logout"></i>
+                </div>
+                <div class="chat-sidebar">
+                    <div class="search-wrap">
+                        <input type="text" id="search" placeholder="Search...">
+                    </div>
+                    <div class="contacts" id="contact-list">
+                        </div>
+                </div>
+            </aside>
+
+            <main class="chat-view">
+                <div id="no-chat" class="centered">
+                    <div class="blink-orb"></div>
+                    <h2>Start a Blink</h2>
+                </div>
+                <div id="chat-active" class="hidden">
+                    <header class="chat-header">
+                        <div class="info">
+                            <img id="target-pfp" src="" alt="">
+                            <div>
+                                <h3 id="target-name">...</h3>
+                                <span class="status">● Online</span>
+                            </div>
+                        </div>
+                        <div class="actions">
+                            <i class="fa-solid fa-phone"></i>
+                            <i class="fa-solid fa-video"></i>
+                        </div>
+                    </header>
+                    <div class="messages" id="message-container"></div>
+                    <div class="input-wrap">
+                        <div class="bar glass">
+                            <input type="text" id="msg-input" placeholder="Say something...">
+                            <button id="send-btn"><i class="fa-solid fa-paper-plane"></i></button>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </section>
+
+    <div id="settings-modal" class="modal">
+        <div class="modal-content glass">
+            <h3>Identity Settings</h3>
+            <input type="text" id="new-seed" placeholder="PFP Seed (Ex: CoolGuy)">
+            <input type="password" id="new-pass" placeholder="New Password">
+            <button id="save-settings" class="primary-btn">Update</button>
+            <button id="close-settings" class="secondary-btn">Back</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
