@@ -1,5 +1,19 @@
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;600;900&display=swap');
+/* Add this at the top of your style.css */
+.hidden {
+    display: none !important;
+}
 
+#auth-screen.active, #app-screen.active {
+    display: flex; /* or block depending on your layout */
+}
+
+/* Ensure app-screen covers the whole view when active */
+#app-screen.active {
+    display: block;
+    height: 100vh;
+    width: 100vw;
+}
 :root {
     --primary: #00f0ff;
     --secondary: #7000ff;
