@@ -25,111 +25,51 @@ const provider = new GoogleAuthProvider();
 // UI Elements
 const authScreen = document.getElementById('auth-screen');
 const appScreen = document.getElementById('app-screen');
-const contactList = document.getElementById('contact-list');
-const msgContainer = document.getElementById('message-container');
-const msgInput = document.getElementById('msg-input');
-const sendBtn = document.getElementById('send-btn');
 
-// --- AUTH LOGIC ---
+// --- 1. Catch Redirect Result ---
+getRedirectResult(auth).catch(err => console.error("Redirect Error:", err));
 
-// 1. Catch result after Google redirect
-getRedirectResult(auth)
-    .then((result) => {
-        if (result?.user) {
-            console.log("Login caught from redirect!");
-            showInterface(result.user);
-        }
-    }).catch(err => console.error("Redirect Error:", err));
-
-// 2. Monitor Auth State (Handles refresh/persistence)
+// --- 2. THE UI SWITCHER ---
 onAuthStateChanged(auth, (user) => {
     if (user) {
-        console.log("Auth state: Logged in", user.displayName);
-        showInterface(user);
+        console.log("Logged in as:", user.displayName);
+        // Force the switch
+        authScreen.style.display = 'none';
+        appScreen.style.display = 'block';
+        appScreen.classList.remove('hidden');
+        
+        document.getElementById('my-pfp').src = user.photoURL;
+        loadContacts();
     } else {
-        console.log("Auth state: Logged out");
-        authScreen.classList.add('active');
-        appScreen.classList.add('hidden');
-        appScreen.classList.remove('active');
+        console.log("No user found.");
+        authScreen.style.display = 'flex';
+        appScreen.style.display = 'none';
     }
 });
 
-// 3. Login/Logout
-document.getElementById('google-login').onclick = () => {
-    console.log("Button clicked, redirecting...");
-    signInWithRedirect(auth, provider);
-};
+// --- 3. Button Triggers ---
+document.getElementById('google-login').onclick = () => signInWithRedirect(auth, provider);
+document.getElementById('logout-btn').onclick = () => signOut(auth).then(() => location.reload());
 
-document.getElementById('logout-btn').onclick = () => {
-    signOut(auth).then(() => window.location.reload());
-};
-
-// --- THE INTERFACE FIX ---
-function showInterface(user) {
-    console.log("Switching to app interface...");
+// --- 4. Chat Logic ---
+function loadContacts() {
+    const contactList = document.getElementById('contact-list');
+    const friends = [
+        { name: 'Alex Rivera', pfp: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Alex' },
+        { name: 'Sarah Tech', pfp: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Sarah' }
+    ];
     
-    // Switch Screens
-    authScreen.classList.remove('active');
-    authScreen.classList.add('hidden');
-    
-    appScreen.classList.remove('hidden');
-    appScreen.classList.add('active');
-
-    // Update Profile Pic
-    const pfp = document.getElementById('my-pfp');
-    if (pfp) pfp.src = user.photoURL;
-
-    renderFriends();
-}
-
-// --- MESSAGING LOGIC ---
-const friends = [
-    { id: 1, name: 'Alex Rivera', pfp: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Alex' },
-    { id: 2, name: 'Sarah Tech', pfp: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Sarah' },
-    { id: 3, name: 'Zane X', pfp: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Zane' }
-];
-
-function renderFriends() {
-    if (!contactList) return;
     contactList.innerHTML = '';
     friends.forEach(f => {
         const div = document.createElement('div');
         div.className = 'contact-card';
         div.innerHTML = `<img src="${f.pfp}"><div><h4>${f.name}</h4><p>Online</p></div>`;
-        div.onclick = () => openChat(f);
+        div.onclick = () => {
+            document.getElementById('no-chat').classList.add('hidden');
+            document.getElementById('chat-active').classList.remove('hidden');
+            document.getElementById('target-name').innerText = f.name;
+            document.getElementById('target-pfp').src = f.pfp;
+        };
         contactList.appendChild(div);
     });
 }
-
-function openChat(f) {
-    console.log("Opening chat with:", f.name);
-    document.getElementById('no-chat').classList.add('hidden');
-    document.getElementById('chat-active').classList.remove('hidden');
-    document.getElementById('target-name').innerText = f.name;
-    document.getElementById('target-pfp').src = f.pfp;
-    msgContainer.innerHTML = '';
-}
-
-function send() {
-    const text = msgInput.value.trim();
-    if(!text) return;
-    
-    const m = document.createElement('div');
-    m.className = 'msg sent';
-    m.innerText = text;
-    msgContainer.appendChild(m);
-    
-    msgInput.value = '';
-    msgContainer.scrollTop = msgContainer.scrollHeight;
-
-    setTimeout(() => {
-        const r = document.createElement('div');
-        r.className = 'msg received';
-        r.innerText = "Blink received. This UI is actually working now! 🔥";
-        msgContainer.appendChild(r);
-        msgContainer.scrollTop = msgContainer.scrollHeight;
-    }, 1000);
-}
-
-if (sendBtn) sendBtn.onclick = send;
-if (msgInput) msgInput.onkeypress = (e) => { if(e.key === 'Enter') send(); };
