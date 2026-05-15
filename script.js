@@ -8,7 +8,7 @@ import {
     signOut 
 } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-auth.js";
 
-// --- CONFIG ---
+// --- YOUR FIREBASE CONFIG ---
 const firebaseConfig = {
     apiKey: "AIzaSyC1Xm5xjv31dPz1XS0jN6KMycJmInuPAX4",
     authDomain: "arr-3301.firebaseapp.com",
@@ -19,6 +19,7 @@ const firebaseConfig = {
     measurementId: "G-7TNRNVHDBT"
 };
 
+// Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const provider = new GoogleAuthProvider();
@@ -33,41 +34,63 @@ const msgContainer = document.getElementById('message-container');
 const msgInput = document.getElementById('msg-input');
 const sendBtn = document.getElementById('send-btn');
 
-// --- AUTH LOGIC ---
-
-// Catch the result of the redirect
+// --- 1. THE FIX: CATCH THE REDIRECT RESULT ---
+// This runs as soon as the page loads to see if we just came back from Google
 getRedirectResult(auth)
     .then((result) => {
         if (result?.user) {
-            console.log("Signed in!");
+            console.log("Successfully logged in:", result.user.displayName);
+            showApp(result.user);
         }
     })
-    .catch((error) => console.error(error));
+    .catch((error) => {
+        console.error("Auth Error:", error.message);
+    });
 
-// Monitor State
+// --- 2. AUTH STATE MONITOR ---
 onAuthStateChanged(auth, (user) => {
     if (user) {
-        authScreen.classList.remove('active');
-        appScreen.classList.add('active');
-        document.getElementById('my-pfp').src = user.photoURL;
-        loadFriends();
+        showApp(user);
     } else {
         authScreen.classList.add('active');
         appScreen.classList.remove('active');
+        appScreen.classList.add('hidden');
     }
 });
 
-// Login button now redirects (to prevent auto-close bug)
-googleBtn.onclick = () => signInWithRedirect(auth, provider);
-logoutBtn.onclick = () => signOut(auth);
+// --- 3. LOGIN / LOGOUT BUTTONS ---
+googleBtn.onclick = () => {
+    console.log("Redirecting to Google...");
+    signInWithRedirect(auth, provider);
+};
 
-// --- APP LOGIC ---
+logoutBtn.onclick = () => {
+    signOut(auth).then(() => {
+        window.location.reload(); 
+    });
+};
+
+// --- 4. UI TRANSITION ---
+function showApp(user) {
+    authScreen.classList.remove('active');
+    appScreen.classList.remove('hidden');
+    appScreen.classList.add('active');
+    
+    // Set your Profile Picture from Google
+    const pfp = document.getElementById('my-pfp');
+    if (pfp) pfp.src = user.photoURL || `https://api.dicebear.com/7.x/avataaars/svg?seed=${user.email}`;
+    
+    renderFriends();
+}
+
+// --- 5. CHAT LOGIC ---
 const friends = [
     { id: 1, name: 'Alex Rivera', pfp: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Alex' },
     { id: 2, name: 'Sarah Tech', pfp: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Sarah' }
 ];
 
-function loadFriends() {
+function renderFriends() {
+    if (!contactList) return;
     contactList.innerHTML = '';
     friends.forEach(f => {
         const div = document.createElement('div');
@@ -92,6 +115,7 @@ function send() {
     msgContainer.appendChild(m);
     msgInput.value = '';
     msgContainer.scrollTop = msgContainer.scrollHeight;
+    
     setTimeout(() => {
         const r = document.createElement('div');
         r.className = 'msg received'; r.innerText = "Blink received 🔥";
@@ -100,5 +124,5 @@ function send() {
     }, 1000);
 }
 
-sendBtn.onclick = send;
-msgInput.onkeypress = (e) => { if(e.key === 'Enter') send(); };
+if (sendBtn) sendBtn.onclick = send;
+if (msgInput) msgInput.onkeypress = (e) => { if(e.key === 'Enter') send(); };
