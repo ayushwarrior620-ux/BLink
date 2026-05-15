@@ -8,7 +8,6 @@ import {
     signOut 
 } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-auth.js";
 
-// --- YOUR FIREBASE CONFIG ---
 const firebaseConfig = {
     apiKey: "AIzaSyC1Xm5xjv31dPz1XS0jN6KMycJmInuPAX4",
     authDomain: "arr-3301.firebaseapp.com",
@@ -19,7 +18,6 @@ const firebaseConfig = {
     measurementId: "G-7TNRNVHDBT"
 };
 
-// Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const provider = new GoogleAuthProvider();
@@ -27,66 +25,68 @@ const provider = new GoogleAuthProvider();
 // UI Elements
 const authScreen = document.getElementById('auth-screen');
 const appScreen = document.getElementById('app-screen');
-const googleBtn = document.getElementById('google-login');
-const logoutBtn = document.getElementById('logout-btn');
 const contactList = document.getElementById('contact-list');
 const msgContainer = document.getElementById('message-container');
 const msgInput = document.getElementById('msg-input');
 const sendBtn = document.getElementById('send-btn');
 
-// --- 1. THE FIX: CATCH THE REDIRECT RESULT ---
-// This runs as soon as the page loads to see if we just came back from Google
+// --- AUTH LOGIC ---
+
+// 1. Catch result after Google redirect
 getRedirectResult(auth)
     .then((result) => {
         if (result?.user) {
-            console.log("Successfully logged in:", result.user.displayName);
-            showApp(result.user);
+            console.log("Login caught from redirect!");
+            showInterface(result.user);
         }
-    })
-    .catch((error) => {
-        console.error("Auth Error:", error.message);
-    });
+    }).catch(err => console.error("Redirect Error:", err));
 
-// --- 2. AUTH STATE MONITOR ---
+// 2. Monitor Auth State (Handles refresh/persistence)
 onAuthStateChanged(auth, (user) => {
     if (user) {
-        showApp(user);
+        console.log("Auth state: Logged in", user.displayName);
+        showInterface(user);
     } else {
+        console.log("Auth state: Logged out");
         authScreen.classList.add('active');
-        appScreen.classList.remove('active');
         appScreen.classList.add('hidden');
+        appScreen.classList.remove('active');
     }
 });
 
-// --- 3. LOGIN / LOGOUT BUTTONS ---
-googleBtn.onclick = () => {
-    console.log("Redirecting to Google...");
+// 3. Login/Logout
+document.getElementById('google-login').onclick = () => {
+    console.log("Button clicked, redirecting...");
     signInWithRedirect(auth, provider);
 };
 
-logoutBtn.onclick = () => {
-    signOut(auth).then(() => {
-        window.location.reload(); 
-    });
+document.getElementById('logout-btn').onclick = () => {
+    signOut(auth).then(() => window.location.reload());
 };
 
-// --- 4. UI TRANSITION ---
-function showApp(user) {
+// --- THE INTERFACE FIX ---
+function showInterface(user) {
+    console.log("Switching to app interface...");
+    
+    // Switch Screens
     authScreen.classList.remove('active');
+    authScreen.classList.add('hidden');
+    
     appScreen.classList.remove('hidden');
     appScreen.classList.add('active');
-    
-    // Set your Profile Picture from Google
+
+    // Update Profile Pic
     const pfp = document.getElementById('my-pfp');
-    if (pfp) pfp.src = user.photoURL || `https://api.dicebear.com/7.x/avataaars/svg?seed=${user.email}`;
-    
+    if (pfp) pfp.src = user.photoURL;
+
     renderFriends();
 }
 
-// --- 5. CHAT LOGIC ---
+// --- MESSAGING LOGIC ---
 const friends = [
     { id: 1, name: 'Alex Rivera', pfp: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Alex' },
-    { id: 2, name: 'Sarah Tech', pfp: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Sarah' }
+    { id: 2, name: 'Sarah Tech', pfp: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Sarah' },
+    { id: 3, name: 'Zane X', pfp: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Zane' }
 ];
 
 function renderFriends() {
@@ -96,29 +96,36 @@ function renderFriends() {
         const div = document.createElement('div');
         div.className = 'contact-card';
         div.innerHTML = `<img src="${f.pfp}"><div><h4>${f.name}</h4><p>Online</p></div>`;
-        div.onclick = () => {
-            document.getElementById('no-chat').classList.add('hidden');
-            document.getElementById('chat-active').classList.remove('hidden');
-            document.getElementById('target-name').innerText = f.name;
-            document.getElementById('target-pfp').src = f.pfp;
-            msgContainer.innerHTML = '';
-        };
+        div.onclick = () => openChat(f);
         contactList.appendChild(div);
     });
+}
+
+function openChat(f) {
+    console.log("Opening chat with:", f.name);
+    document.getElementById('no-chat').classList.add('hidden');
+    document.getElementById('chat-active').classList.remove('hidden');
+    document.getElementById('target-name').innerText = f.name;
+    document.getElementById('target-pfp').src = f.pfp;
+    msgContainer.innerHTML = '';
 }
 
 function send() {
     const text = msgInput.value.trim();
     if(!text) return;
+    
     const m = document.createElement('div');
-    m.className = 'msg sent'; m.innerText = text;
+    m.className = 'msg sent';
+    m.innerText = text;
     msgContainer.appendChild(m);
+    
     msgInput.value = '';
     msgContainer.scrollTop = msgContainer.scrollHeight;
-    
+
     setTimeout(() => {
         const r = document.createElement('div');
-        r.className = 'msg received'; r.innerText = "Blink received 🔥";
+        r.className = 'msg received';
+        r.innerText = "Blink received. This UI is actually working now! 🔥";
         msgContainer.appendChild(r);
         msgContainer.scrollTop = msgContainer.scrollHeight;
     }, 1000);
