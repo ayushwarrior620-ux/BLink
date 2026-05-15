@@ -17,8 +17,8 @@
                 <p>The speed of connection.</p>
             </div>
             <div class="input-group">
-                <input type="email" id="email" placeholder="Email" required>
-                <input type="password" id="password" placeholder="Password" required>
+                <input type="email" id="email-input" placeholder="Email">
+                <input type="password" id="pass-input" placeholder="Password">
             </div>
             <div class="btn-group">
                 <button id="login-btn" class="primary-btn">Sign In</button>
@@ -27,26 +27,25 @@
         </div>
     </section>
 
-    <section id="app-screen">
+    <section id="app-screen" class="hidden">
         <div class="main-layout glass">
             <aside class="sidebar">
                 <div class="side-nav">
                     <div class="user-circle" id="open-settings">
-                        <img id="my-pfp" src="https://api.dicebear.com/7.x/avataaars/svg?seed=Me" alt="">
+                        <img id="my-pfp" src="https://api.dicebear.com/7.x/avataaars/svg?seed=Me" alt="me">
                     </div>
                     <nav>
                         <i class="fa-solid fa-house active"></i>
                         <i class="fa-solid fa-message"></i>
                         <i class="fa-solid fa-user-group"></i>
                     </nav>
-                    <i class="fa-solid fa-right-from-bracket logout" id="logout"></i>
+                    <i class="fa-solid fa-right-from-bracket logout" id="logout-btn"></i>
                 </div>
                 <div class="chat-sidebar">
                     <div class="search-wrap">
-                        <input type="text" id="search" placeholder="Search...">
+                        <input type="text" id="search-input" placeholder="Search...">
                     </div>
-                    <div class="contacts" id="contact-list">
-                        </div>
+                    <div class="contacts" id="contact-list"></div>
                 </div>
             </aside>
 
@@ -60,7 +59,7 @@
                         <div class="info">
                             <img id="target-pfp" src="" alt="">
                             <div>
-                                <h3 id="target-name">...</h3>
+                                <h3 id="target-name">Name</h3>
                                 <span class="status">● Online</span>
                             </div>
                         </div>
