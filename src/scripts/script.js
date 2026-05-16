@@ -3,9 +3,7 @@ import { initializeApp } from "firebase/app";
 import {
     getAuth,
     GoogleAuthProvider,
-    signInWithPopup,
-    signOut,
-    onAuthStateChanged
+    signInWithPopup
 } from "firebase/auth";
 
 const firebaseConfig = {
@@ -24,35 +22,38 @@ const auth = getAuth(app);
 
 const provider = new GoogleAuthProvider();
 
-const googleLoginBtn =
+const btn =
     document.getElementById("googleLoginBtn");
 
-const message =
-    document.getElementById("message");
-
-googleLoginBtn.addEventListener("click", async () => {
+btn.addEventListener("click", async () => {
 
     try {
+
         const result =
             await signInWithPopup(auth, provider);
 
         const user = result.user;
 
-        message.textContent =
-            `Logged in as ${user.displayName}`;
+        const token =
+            await user.getIdToken();
 
-        console.log(user);
+        console.log(token);
+
+        const response = await fetch(
+            "https://blink-g8w4.onrender.com/users/me",
+            {
+                method: "GET",
+
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            }
+        );
+
+        const data = await response.json();
+
+        console.log(data);
     } catch (error) {
         console.error(error);
-
-        message.textContent = error.message;
-    }
-});
-
-onAuthStateChanged(auth, (user) => {
-    if (user) {
-        console.log("Logged in:", user.email);
-    } else {
-        console.log("No user logged in");
     }
 });
