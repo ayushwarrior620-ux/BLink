@@ -1,0 +1,27 @@
+{
+  "name": "blink_web",
+  "version": "1.0.0",
+  "description": "",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ayushwarrior620-ux/BLink.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ayushwarrior620-ux/BLink/issues"
+  },
+  "homepage": "https://github.com/ayushwarrior620-ux/BLink#readme",
+  "dependencies": {
+    "firebase": "^12.13.0"
+  },
+  "devDependencies": {
+    "vite": "^8.0.13"
+  }
+}

@@ -1,83 +1,46 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Blink // Future Messaging</title>
-    <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Blink</title>
+
+    <link rel="stylesheet" href="src/styles/style.css" />
 </head>
 <body>
-    <div class="mesh-bg"></div>
-    
-    <section id="auth-screen" class="active">
-        <div class="auth-container glass">
-            <div class="logo-area">
-                <h1 class="glow-text">blink</h1>
-                <p>The speed of connection.</p>
-            </div>
-            <div class="btn-group">
-                <button id="google-login" class="primary-btn">
-                    <i class="fa-brands fa-google"></i> Continue with Google
-                </button>
-            </div>
-            <p class="auth-footer">Sign-in handled securely by Google</p>
+    <div class="container">
+        <div class="login-box">
+            <h1>Blink</h1>
+            <p class="subtitle">Login</p>
+
+            <form id="loginForm">
+                <div class="input-group">
+                    <label>Email</label>
+                    <input 
+                        type="email" 
+                        id="email" 
+                        placeholder="Enter your email"
+                        required
+                    />
+                </div>
+
+                <div class="input-group">
+                    <label>Password</label>
+                    <input 
+                        type="password" 
+                        id="password" 
+                        placeholder="Enter your password"
+                        required
+                    />
+                </div>
+
+                <button type="submit">Login</button>
+            </form>
+
+            <p id="message"></p>
         </div>
-    </section>
+    </div>
 
-    <section id="app-screen" class="hidden">
-        <div class="main-layout glass">
-            <aside class="sidebar">
-                <div class="side-nav">
-                    <div class="user-circle">
-                        <img id="my-pfp" src="" alt="user">
-                    </div>
-                    <nav>
-                        <i class="fa-solid fa-house active"></i>
-                        <i class="fa-solid fa-message"></i>
-                        <i class="fa-solid fa-user-group"></i>
-                    </nav>
-                    <i class="fa-solid fa-right-from-bracket logout" id="logout-btn"></i>
-                </div>
-                <div class="chat-sidebar">
-                    <div class="search-wrap">
-                        <input type="text" placeholder="Search...">
-                    </div>
-                    <div class="contacts" id="contact-list"></div>
-                </div>
-            </aside>
-
-            <main class="chat-view">
-                <div id="no-chat" class="centered">
-                    <div class="blink-orb"></div>
-                    <h2>Start a Blink</h2>
-                </div>
-                <div id="chat-active" class="hidden">
-                    <header class="chat-header">
-                        <div class="info">
-                            <img id="target-pfp" src="" alt="">
-                            <div>
-                                <h3 id="target-name">Name</h3>
-                                <span class="status">● Online</span>
-                            </div>
-                        </div>
-                        <div class="actions">
-                            <i class="fa-solid fa-phone"></i>
-                            <i class="fa-solid fa-video"></i>
-                        </div>
-                    </header>
-                    <div class="messages" id="message-container"></div>
-                    <div class="input-wrap">
-                        <div class="bar glass">
-                            <input type="text" id="msg-input" placeholder="Say something...">
-                            <button id="send-btn"><i class="fa-solid fa-paper-plane"></i></button>
-                        </div>
-                    </div>
-                </div>
-            </main>
-        </div>
-    </section>
-
-    <script type="module" src="script.js"></script>
+    <script src="src/scripts/script.js"></script>
 </body>
 </html>
