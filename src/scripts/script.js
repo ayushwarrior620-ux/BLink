@@ -2,10 +2,10 @@ import { initializeApp } from "firebase/app";
 
 import {
     getAuth,
-    signInWithEmailAndPassword,
-    createUserWithEmailAndPassword,
-    onAuthStateChanged,
-    signOut
+    GoogleAuthProvider,
+    signInWithPopup,
+    signOut,
+    onAuthStateChanged
 } from "firebase/auth";
 
 const firebaseConfig = {
@@ -19,46 +19,39 @@ const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
+
 const auth = getAuth(app);
 
-const form = document.getElementById("loginForm");
-const message = document.getElementById("message");
+const provider = new GoogleAuthProvider();
 
-form.addEventListener("submit", async (e) => {
-    e.preventDefault();
+const googleLoginBtn =
+    document.getElementById("googleLoginBtn");
 
-    const email = document.getElementById("email").value;
-    const password = document.getElementById("password").value;
+const message =
+    document.getElementById("message");
+
+googleLoginBtn.addEventListener("click", async () => {
 
     try {
-        const userCredential =
-            await signInWithEmailAndPassword(
-                auth,
-                email,
-                password
-            );
+        const result =
+            await signInWithPopup(auth, provider);
+
+        const user = result.user;
+
         message.textContent =
-            `Logged in as ${userCredential.user.email}`;
-    } catch (loginError) {
-        try {
-            const userCredential =
-                await createUserWithEmailAndPassword(
-                    auth,
-                    email,
-                    password
-                );
-            message.textContent =
-                `Account created for ${userCredential.user.email}`;
-        } catch (signupError) {
-            message.textContent = signupError.message;
-            console.error(signupError);
-        }
+            `Logged in as ${user.displayName}`;
+
+        console.log(user);
+    } catch (error) {
+        console.error(error);
+
+        message.textContent = error.message;
     }
 });
 
 onAuthStateChanged(auth, (user) => {
     if (user) {
-        console.log("User logged in:", user.email);
+        console.log("Logged in:", user.email);
     } else {
         console.log("No user logged in");
     }
