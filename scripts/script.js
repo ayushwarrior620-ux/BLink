@@ -51,8 +51,9 @@ btn.addEventListener("click", async () => {
         );
 
         const data = await response.json();
-
-        console.log(data);
+        if (response.ok) {
+            window.location.href = "/index.html"
+        }
     } catch (error) {
         console.error(error);
     }

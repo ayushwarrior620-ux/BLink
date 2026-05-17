@@ -2,7 +2,7 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: Arial, sans-serif;
+    font-family: 'Open Sans', sans-serif;
 }
 
 body {
@@ -31,6 +31,7 @@ body {
 
 h1 {
     margin-bottom: 10px;
+    font-size: 360%;
 }
 
 .subtitle {
