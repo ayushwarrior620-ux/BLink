@@ -1,11 +1,14 @@
 import { auth }
 from "./firebase.js";
 
+import { redirectIfLoggedIn } from "./auth-guard.js"
+
 import {
     GoogleAuthProvider,
     signInWithPopup
 } from "firebase/auth";
 
+redirectIfLoggedIn();
 
 const provider =
     new GoogleAuthProvider();

@@ -2,10 +2,19 @@ import { auth }
 from "./firebase.js";
 
 import {
+    requireAuth
+}
+from "./auth-guard.js";
+
+import {
     onAuthStateChanged,
     signOut
 } from "firebase/auth";
 
+requireAuth(async (user) => {
+
+    console.log(user.email);
+});
 
 const nameElement =
     document.getElementById("name");
@@ -21,7 +30,7 @@ onAuthStateChanged(
 
         if (!user) {
             window.location.href =
-                "/login.html";
+                "/";
 
             return;
         }
@@ -54,7 +63,6 @@ onAuthStateChanged(
     }
 );
 
-
 logoutBtn.addEventListener(
     "click",
 
@@ -63,6 +71,6 @@ logoutBtn.addEventListener(
         await signOut(auth);
 
         window.location.href =
-            "/login.html";
+            "/";
     }
 );
