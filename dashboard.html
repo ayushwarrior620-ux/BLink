@@ -5,23 +5,35 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Blink</title>
 
-    <link rel="stylesheet" href="./styles/style.css" />
+    <link rel="stylesheet" href="./styles/dashboard_style.css" />
 </head>
 <body>
-    <div class="login-box">
-        <h1>Dashboard</h1>
-
-        <p>
-            Welcome,
-            <span id="name"></span>
-        </p>
-
-        <button id="logoutBtn">
-            Logout
-        </button>
-
+    <div class="navbar-logo-center">
+        <div class="container-2">
+            <div class="navbar-wrapper-three">
+            <nav role="navigation" class="nav-menu-wrapper-three w-nav-menu">
+                <div class="nav-menu-three">
+                <ul role="list" class="nav-menu-block w-list-unstyled">
+                    <li>
+                    <h1>Blink</h1>
+                    </li>
+                </ul>
+                <ul role="list" class="nav-menu-block w-list-unstyled">
+                    <li>
+                    <a id="name" href="#" class="nav-link-accent">User</a>
+                    </li>
+                    <li class="mobile-margin-top-10">
+                    <a id="logoutBtn" href="#" class="button-primary w-button">Logout</a>
+                    </li>
+                </ul>
+                </div>
+            </nav>
+            <div class="menu-button w-nav-button">
+                <div class="w-icon-nav-menu"></div>
+            </div>
+            </div>
+        </div>
     </div>
-
     <script type="module" src="./scripts/dashboard.js"></script>
 </body>
 </html>
