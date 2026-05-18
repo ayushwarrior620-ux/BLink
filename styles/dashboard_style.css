@@ -62,3 +62,27 @@ nav{
 #logoutBtn:hover{
     background: red;
 }
+
+@media (max-width: 600px){
+
+    nav{
+        flex-direction: column;
+        gap: 15px;
+        padding: 20px;
+    }
+
+    .nav-links{
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .nav-links li{
+        width: 100%;
+        justify-content: center;
+    }
+
+    #logoutBtn{
+        width: 100%;
+        max-width: 200px;
+    }
+}
